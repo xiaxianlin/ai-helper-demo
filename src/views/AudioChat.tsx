@@ -6,9 +6,12 @@ import { useEffect, useState } from "react";
 export function AudioChat() {
   const [canSpeaking, setCanSpeaking] = useState(false);
   const recorder = useRecorder({
-    onRecord: (data) => socket?.send(data),
+    onRecord: (data) => {
+      console.log("[LOG_INFO]", data);
+      socket?.send(data);
+    },
   });
-  const { conn, socket, connect, disconnect } = useWebsocket("", {
+  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/buddy/chat/demo", {
     onMessage: (data) => {
       if (typeof data === "string") {
         handleTextMessage(data);
@@ -37,16 +40,12 @@ export function AudioChat() {
 
   const handleStreamMessage = () => {};
 
-  // const handlePlayOver = () => {
-  //   socket?.send(JSON.stringify({ status: "ready" }));
-  // };
-
   const handleRecord = () => {
     if (recorder.running) {
       recorder.stop();
-      socket?.send(JSON.stringify({ status: "endPush" }));
+      socket?.send(JSON.stringify({ status: "end" }));
     } else {
-      socket?.send(JSON.stringify({ status: "startPush" }));
+      socket?.send(JSON.stringify({ status: "start" }));
       recorder.start();
     }
   };
@@ -56,6 +55,7 @@ export function AudioChat() {
       socket.send(JSON.stringify({ status: "init", type: "webm" }));
     }
   }, [conn]);
+
   return (
     <div className="container">
       <Flex vertical gap={24}>

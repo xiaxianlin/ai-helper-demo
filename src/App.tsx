@@ -8,7 +8,7 @@ import { ASRView } from "./views/ASR";
 import { TextTTSChat } from "./views/TextTTSChat";
 
 function App() {
-  const [activeKey, setActiveKey] = useState("chat_to_tts");
+  const [activeKey, setActiveKey] = useState("audio_chat");
   return (
     <Tabs
       size="large"
