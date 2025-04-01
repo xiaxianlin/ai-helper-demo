@@ -5,9 +5,10 @@ import { TextChat } from "./views/TextChat";
 import { useState } from "react";
 import { TextToSpeak } from "./views/TextToSpeak";
 import { ASRView } from "./views/ASR";
+import { TextTTSChat } from "./views/TextTTSChat";
 
 function App() {
-  const [activeKey, setActiveKey] = useState("asr");
+  const [activeKey, setActiveKey] = useState("chat_to_tts");
   return (
     <Tabs
       size="large"
@@ -22,16 +23,6 @@ function App() {
           children: <LocalPlayerView />,
         },
         {
-          label: `简单聊天室`,
-          key: "text_chat",
-          children: <TextChat />,
-        },
-        {
-          label: `语音聊天室`,
-          key: "audio_chat",
-          children: <AudioChat />,
-        },
-        {
           label: `语音合成`,
           key: "tts",
           children: <TextToSpeak />,
@@ -40,6 +31,21 @@ function App() {
           label: `语音识别`,
           key: "asr",
           children: <ASRView />,
+        },
+        {
+          label: `文本对话`,
+          key: "text_chat",
+          children: <TextChat />,
+        },
+        {
+          label: `文本-语音对话`,
+          key: "chat_to_tts",
+          children: <TextTTSChat />,
+        },
+        {
+          label: `语音聊天室`,
+          key: "audio_chat",
+          children: <AudioChat />,
         },
       ]}
     />
