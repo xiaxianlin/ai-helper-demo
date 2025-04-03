@@ -9,7 +9,7 @@ export function TextTTSChat() {
   const player = useRef<StreamPlayer>();
   const [playing, setPlaying] = useState(false);
   const [value, setValue] = useState("");
-  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/ai/chat_tts", {
+  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/ai/llm_tts", {
     onMessage: (data) => {
       if (data === "done") {
         player.current?.stop();

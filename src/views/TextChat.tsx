@@ -49,7 +49,7 @@ export function TextChat() {
   const [running, setRunning] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [result, setResult] = useState<Result>();
-  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/ai/chat", {
+  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/ai/llm", {
     onMessage: (data) => {
       try {
         const json = JSON.parse(data);
