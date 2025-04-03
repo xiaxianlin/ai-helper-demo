@@ -15,7 +15,7 @@ export function ASRView() {
   const handleFileSelect = async (file: File) => {
     if (!file) return;
 
-    socket?.send("start_wave");
+    socket?.send("start");
     const buffer = await readFileBuffer(file);
     socket?.send(buffer);
     socket?.send("stop");
