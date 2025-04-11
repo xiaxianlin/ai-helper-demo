@@ -11,7 +11,7 @@ export function AudioChat() {
       socket?.send(data);
     },
   });
-  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/buddy/chat/demo", {
+  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/chat/connect", {
     onMessage: (data) => {
       if (typeof data === "string") {
         handleTextMessage(data);

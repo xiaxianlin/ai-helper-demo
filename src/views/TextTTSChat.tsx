@@ -8,7 +8,7 @@ export function TextTTSChat() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const player = useRef<StreamPlayer>();
   const [playing, setPlaying] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("你好");
   const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/ai/llm_tts", {
     onMessage: (data) => {
       if (data === "done") {
