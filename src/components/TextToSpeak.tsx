@@ -2,14 +2,14 @@ import { useRef, useState } from "react";
 import { Button, Flex, Input } from "antd";
 import { useWebsocket } from "../hooks/useWebsocket";
 import { SendOutlined } from "@ant-design/icons";
-import { StreamPlayer } from "../core/Player";
+import { StreamPlayer } from "../bases/StreamPlayer";
 
-export function TextTTSChat() {
+export function TextToSpeak() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const player = useRef<StreamPlayer>();
   const [playing, setPlaying] = useState(false);
-  const [value, setValue] = useState("你好");
-  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/ai/llm_tts", {
+  const [value, setValue] = useState("这是一段测试语音，测试一下效果");
+  const { conn, socket, connect, disconnect } = useWebsocket("ws://127.0.0.1:8000/ai/tts", {
     onMessage: (data) => {
       if (data === "done") {
         player.current?.stop();
@@ -21,12 +21,9 @@ export function TextTTSChat() {
 
   const send = () => {
     setPlaying(true);
-    player.current = new StreamPlayer(canvasRef.current, {
-      onEnd: () => {
-        setValue("");
-        setPlaying(false);
-      },
-    });
+    const streamPlayer = new StreamPlayer(canvasRef.current);
+    streamPlayer.onend = () => setPlaying(false);
+    player.current = streamPlayer;
     socket?.send(value);
   };
 

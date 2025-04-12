@@ -1,26 +1,35 @@
 import { AudioWave } from "./AudioWave";
 
 export class Recorder {
-  wave?: AudioWave;
-  stream?: MediaStream;
-  recorder?: MediaRecorder;
-  running: boolean;
-  data: Uint8Array;
-  context: AudioContext;
-  analyser: AnalyserNode;
+  private wave?: AudioWave;
+  private stream?: MediaStream;
+  private recorder?: MediaRecorder;
+  private running: boolean;
+  private data: Uint8Array;
+  private context: AudioContext;
+  private analyser: AnalyserNode;
+
+  public onstream?: (data: BlobEvent) => void;
 
   constructor(canvas: HTMLCanvasElement | null) {
     this.running = false;
     this.context = new AudioContext();
     this.analyser = this.context.createAnalyser();
-    this.analyser.fftSize = 2048;
+    this.analyser.fftSize = 1024;
     this.data = new Uint8Array(this.analyser.frequencyBinCount);
     if (canvas) {
       this.wave = new AudioWave(canvas);
     }
   }
 
-  async start(onStream?: (data: Blob) => void) {
+  private draw() {
+    if (!this.wave || !this.running) return;
+    requestAnimationFrame(this.draw.bind(this));
+    this.analyser.getByteTimeDomainData(this.data);
+    this.wave.draw(this.data);
+  }
+
+  async start() {
     this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     // 连接音频流
     const source = this.context.createMediaStreamSource(this.stream);
@@ -28,13 +37,13 @@ export class Recorder {
 
     // 录音设置
     this.recorder = new MediaRecorder(this.stream);
-    this.recorder.ondataavailable = (e) => {
-      onStream?.(e.data);
-    };
+    if (this.onstream) {
+      this.recorder.ondataavailable = this.onstream;
+    }
 
     // 开始录音
     this.running = true;
-    this.recorder.start();
+    this.recorder.start(500);
     this.draw();
   }
 
@@ -42,12 +51,6 @@ export class Recorder {
     this.running = false;
     this.recorder?.stop();
     this.stream?.getTracks().forEach((track) => track.stop());
-  }
-
-  draw() {
-    if (!this.wave || !this.running) return;
-    requestAnimationFrame(this.draw.bind(this));
-    this.analyser.getByteTimeDomainData(this.data);
-    this.wave.draw(this.data);
+    this.wave?.clear();
   }
 }

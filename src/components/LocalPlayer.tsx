@@ -1,6 +1,6 @@
 import { Button, Flex, Input } from "antd";
 import { useRef, useState } from "react";
-import { LocalPlayer } from "../core/Player";
+import { LocalPlayer } from "../bases/LocalPlayer";
 import { PlayCircleOutlined } from "@ant-design/icons";
 import { readFileBuffer } from "../utils/file";
 

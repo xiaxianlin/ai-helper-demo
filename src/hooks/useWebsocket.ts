@@ -6,6 +6,10 @@ export function useWebsocket(url: string, options?: { onMessage?: (data: any) =>
   const [socket, setSocket] = useState<WebSocket>();
 
   const connect = () => {
+    if (!url) {
+      return message.error("URL Missing.");
+    }
+
     const ws = new WebSocket(url);
     ws.binaryType = "arraybuffer";
 
